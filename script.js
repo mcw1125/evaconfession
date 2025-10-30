@@ -26,15 +26,21 @@ function setupEventListeners() {
     // Main menu buttons
     document.getElementById('newConfessionBtn').addEventListener('click', newConfession);
     document.getElementById('viewHistoryBtn').addEventListener('click', showHistory);
+    document.getElementById('exportBtn').addEventListener('click', exportConfessions);
+    document.getElementById('importBtn').addEventListener('click', () => {
+        document.getElementById('importFile').click();
+    });
+    document.getElementById('importFile').addEventListener('change', importConfessions);
 
     // Navigation buttons
     document.getElementById('backToMenu1').addEventListener('click', () => showPage('page1'));
     document.getElementById('backToMenu2').addEventListener('click', () => showPage('page1'));
+    document.getElementById('backToHistory').addEventListener('click', () => showPage('page4'));
     document.getElementById('backToSins').addEventListener('click', () => showPage('page2'));
     document.getElementById('toScriptBtn').addEventListener('click', prepareConfessionScript);
     document.getElementById('saveConfessionBtn').addEventListener('click', saveConfession);
 
-    // Search functionality (optional filter)
+    // Search functionality
     document.getElementById('sinSearch').addEventListener('input', (e) => {
         filterSins(e.target.value);
     });
@@ -129,7 +135,7 @@ function displayDailyQuote() {
     }
 }
 
-// Sin management - FIXED: Now displays all sins in a list with checkboxes
+// Sin management
 function loadSinsCategories() {
     const container = document.getElementById('sinsCategories');
     if (!container) return;
@@ -140,7 +146,7 @@ function loadSinsCategories() {
         const categoryElement = document.createElement('div');
         categoryElement.className = 'sin-category';
         categoryElement.innerHTML = `
-            <div class="category-header">
+            <div class="category-header" onclick="toggleCategory(this)">
                 ${category.category}
             </div>
             <div class="sin-items">
@@ -158,6 +164,11 @@ function loadSinsCategories() {
         `;
         container.appendChild(categoryElement);
     });
+}
+
+function toggleCategory(header) {
+    const items = header.parentElement.querySelector('.sin-items');
+    items.classList.toggle('hidden');
 }
 
 function toggleSin(sinText, sinType, isChecked) {
@@ -227,7 +238,7 @@ function filterSins(searchTerm) {
     });
 }
 
-// Confession script generation
+// Confession script generation - CHILD-FRIENDLY VERSION
 function generateFullScript() {
     const container = document.getElementById('fullConfessionScript');
     if (!container) return;
@@ -332,6 +343,14 @@ function saveConfession() {
         timeSince: timeSince,
         sins: [...selectedSins],
         script: scriptHTML,
+        penance: {
+            hailMarys: 0,
+            ourFathers: 0,
+            divineMercy: false,
+            generalPrayer: false,
+            rosary: false,
+            other: ''
+        },
         timestamp: new Date().toISOString()
     };
     
@@ -380,14 +399,16 @@ function displayHistory() {
             const sinCount = confession.sins.length;
             
             historyItem.innerHTML = `
-                <div class="history-item-content" onclick="showConfessionDetail(${confession.id})">
+                <div class="history-item-content">
                     <div class="history-item-time">${confession.fullDate}</div>
                     <div class="history-item-stats">
                         ${sinCount} thing${sinCount !== 1 ? 's' : ''} confessed
                     </div>
                     <div class="history-item-summary">Time since last confession: ${confession.timeSince || 'Not sure'}</div>
+                    ${getPenanceSummary(confession.penance)}
                 </div>
                 <div class="history-item-actions">
+                    <button class="view-details-btn" onclick="showConfessionDetail(${confession.id})">View</button>
                     <button class="delete-confession" onclick="deleteConfession(${confession.id}, event)">Delete</button>
                 </div>
             `;
@@ -397,50 +418,257 @@ function displayHistory() {
     });
 }
 
+function getPenanceSummary(penance) {
+    if (!penance) return '<div class="history-item-penance">No penance recorded</div>';
+    
+    const parts = [];
+    
+    if (penance.hailMarys > 0) {
+        parts.push(`${penance.hailMarys} Hail Mary${penance.hailMarys > 1 ? 's' : ''}`);
+    }
+    
+    if (penance.ourFathers > 0) {
+        parts.push(`${penance.ourFathers} Our Father${penance.ourFathers > 1 ? 's' : ''}`);
+    }
+    
+    if (penance.divineMercy) parts.push('Divine Mercy Chaplet');
+    if (penance.generalPrayer) parts.push('General Prayer');
+    if (penance.rosary) parts.push('Rosary');
+    if (penance.other) parts.push(penance.other);
+    
+    if (parts.length === 0) {
+        return '<div class="history-item-penance">No penance recorded</div>';
+    }
+    
+    return `<div class="history-item-penance">Penance: ${parts.join(', ')}</div>`;
+}
+
 function showConfessionDetail(confessionId) {
     const confession = confessionHistory.find(c => c.id === confessionId);
     if (!confession) return;
     
-    // For children, we'll just show a simple view
-    const container = document.getElementById('confessionHistory');
+    const container = document.getElementById('confessionDetail');
+    if (!container) return;
     
-    // Create a modal-like display
-    const detailView = document.createElement('div');
-    detailView.className = 'confession-detail';
-    detailView.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: white;
-        padding: 20px;
-        border-radius: 15px;
-        border: 3px solid #FFD700;
-        z-index: 1000;
-        max-width: 90%;
-        max-height: 80%;
-        overflow-y: auto;
-    `;
+    // Ensure penance object exists with proper structure
+    if (!confession.penance) {
+        confession.penance = {
+            hailMarys: 0,
+            ourFathers: 0,
+            divineMercy: false,
+            generalPrayer: false,
+            rosary: false,
+            other: ''
+        };
+    }
     
-    detailView.innerHTML = `
-        <div style="text-align: center; margin-bottom: 20px;">
-            <h3>Confession from ${confession.date}</h3>
-            <button onclick="this.parentElement.parentElement.remove()" style="position: absolute; top: 10px; right: 10px; background: #FF6B6B; color: white; border: none; padding: 5px 10px; border-radius: 5px; cursor: pointer;">X</button>
+    container.innerHTML = `
+        <div class="detail-header">
+            <h3>Confession from ${confession.fullDate}</h3>
         </div>
-        <div>${confession.script}</div>
+        <div class="full-script">
+            ${confession.script}
+        </div>
+        <div class="penance-section">
+            <h4>Penance Received</h4>
+            <div class="penance-options">
+                <div class="penance-option">
+                    <input type="checkbox" id="detailDivineMercy" ${confession.penance.divineMercy ? 'checked' : ''}>
+                    <label for="detailDivineMercy">Divine Mercy Chaplet</label>
+                </div>
+                <div class="penance-option">
+                    <input type="checkbox" id="detailGeneralPrayer" ${confession.penance.generalPrayer ? 'checked' : ''}>
+                    <label for="detailGeneralPrayer">General Prayer</label>
+                </div>
+                <div class="penance-option">
+                    <input type="checkbox" id="detailRosary" ${confession.penance.rosary ? 'checked' : ''}>
+                    <label for="detailRosary">Rosary</label>
+                </div>
+                <div class="penance-count-option">
+                    <label for="detailHailMaryCount">Hail Marys:</label>
+                    <input type="number" id="detailHailMaryCount" min="0" max="50" value="${confession.penance.hailMarys || 0}">
+                </div>
+                <div class="penance-count-option">
+                    <label for="detailOurFatherCount">Our Fathers:</label>
+                    <input type="number" id="detailOurFatherCount" min="0" max="50" value="${confession.penance.ourFathers || 0}">
+                </div>
+                <div class="penance-other-option">
+                    <label for="detailOtherPenance">Other Penance:</label>
+                    <input type="text" id="detailOtherPenance" placeholder="e.g., Station of the Cross, specific prayer..." value="${confession.penance.other || ''}">
+                </div>
+            </div>
+            <button onclick="savePenance(${confession.id})" class="btn-primary">Save Penance</button>
+        </div>
     `;
     
-    document.body.appendChild(detailView);
+    showPage('page5');
+}
+
+function savePenance(confessionId) {
+    const confession = confessionHistory.find(c => c.id === confessionId);
+    
+    if (confession) {
+        confession.penance = {
+            hailMarys: parseInt(document.getElementById('detailHailMaryCount').value) || 0,
+            ourFathers: parseInt(document.getElementById('detailOurFatherCount').value) || 0,
+            divineMercy: document.getElementById('detailDivineMercy').checked,
+            generalPrayer: document.getElementById('detailGeneralPrayer').checked,
+            rosary: document.getElementById('detailRosary').checked,
+            other: document.getElementById('detailOtherPenance').value || ''
+        };
+        
+        localStorage.setItem('confessionHistory', JSON.stringify(confessionHistory));
+        alert('Penance saved!');
+        
+        // Update the history view to show the new penance
+        displayHistory();
+        showPage('page4');
+    }
 }
 
 function deleteConfession(confessionId, event) {
     event.stopPropagation();
     
-    if (confirm('Are you sure you want to delete this confession?')) {
+    if (confirm('Are you sure you want to delete this confession? This action cannot be undone.')) {
         confessionHistory = confessionHistory.filter(confession => confession.id !== confessionId);
         localStorage.setItem('confessionHistory', JSON.stringify(confessionHistory));
         displayHistory();
     }
+}
+
+// Export/Import functions
+function exportConfessions() {
+    if (confessionHistory.length === 0) {
+        alert('No confessions to export.');
+        return;
+    }
+    
+    const data = JSON.stringify(confessionHistory, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    
+    // Create filename with current date
+    const date = new Date().toISOString().split('T')[0];
+    a.download = `confession-backup-${date}.json`;
+    
+    // Track if the download was actually initiated
+    let downloadStarted = false;
+    
+    // Add event listeners to track if download actually happens
+    a.addEventListener('click', () => {
+        downloadStarted = true;
+    });
+    
+    // Add timeout to check if download was initiated
+    setTimeout(() => {
+        if (!downloadStarted) {
+            // User likely canceled the download
+            URL.revokeObjectURL(url);
+            return; // No alert message
+        }
+    }, 100);
+    
+    // Trigger download
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    
+    // Show success message only if download was likely initiated
+    setTimeout(() => {
+        if (downloadStarted) {
+            alert(`Exported ${confessionHistory.length} confessions!`);
+        }
+        URL.revokeObjectURL(url);
+    }, 500);
+}
+
+// Alternative simpler export function that doesn't show false success messages
+function exportConfessionsSimple() {
+    if (confessionHistory.length === 0) {
+        alert('No confessions to export.');
+        return;
+    }
+    
+    const data = JSON.stringify(confessionHistory, null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    
+    // Create filename with current date
+    const date = new Date().toISOString().split('T')[0];
+    a.download = `confession-backup-${date}.json`;
+    
+    // Trigger download
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    
+    // Don't show success message - let the browser's download behavior speak for itself
+    // The file will either download or the user will see their browser's cancel option
+    
+    // Clean up the URL after a delay
+    setTimeout(() => {
+        URL.revokeObjectURL(url);
+    }, 1000);
+}
+
+function importConfessions(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    
+    // Check file type
+    if (!file.name.endsWith('.json')) {
+        alert('Please select a JSON file.');
+        return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        try {
+            const importedData = JSON.parse(e.target.result);
+            
+            // Validate the imported data structure
+            if (!Array.isArray(importedData)) {
+                throw new Error('Invalid file format');
+            }
+            
+            if (confirm(`This will import ${importedData.length} confessions. Do you want to replace your current confessions or add to them? Press OK to replace, Cancel to add.`)) {
+                // Replace current data
+                confessionHistory = importedData;
+            } else {
+                // Add to current data (avoid duplicates by ID)
+                importedData.forEach(confession => {
+                    if (!confessionHistory.find(c => c.id === confession.id)) {
+                        confessionHistory.push(confession);
+                    }
+                });
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('confessionHistory', JSON.stringify(confessionHistory));
+            
+            // Update the display
+            displayHistory();
+            
+            alert(`Successfully imported ${importedData.length} confessions!`);
+            
+            // Reset the file input
+            event.target.value = '';
+            
+        } catch (error) {
+            console.error('Import error:', error);
+            alert('Error importing confessions. Please make sure you selected a valid confession backup file.');
+        }
+    };
+    
+    reader.onerror = function() {
+        alert('Error reading the file. Please try again.');
+    };
+    
+    reader.readAsText(file);
 }
 
 // Initialize when DOM is loaded
