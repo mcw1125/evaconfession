@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Children's Confession Helper</title>
+    <title>Catholic Confession Assistant</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,27 +11,33 @@
         <!-- Page 1: Main Menu -->
         <div id="page1" class="page active">
             <div class="header">
-                <h1>Children's Confession Helper</h1>
-                <p>A friendly guide to help you prepare for confession</p>
+                <h1>Confession Assistant</h1>
+                <p>A tool to help prepare for the Sacrament of Reconciliation</p>
             </div>
             <div class="menu-buttons">
-                <button id="newConfessionBtn" class="btn-primary">Prepare for Confession</button>
-                <button id="viewHistoryBtn" class="btn-secondary">My Confession History</button>
+                <button id="newConfessionBtn" class="btn-primary">New Confession</button>
+                <button id="viewHistoryBtn" class="btn-secondary">Confession History</button>
+                <button id="exportBtn" class="btn-secondary">Export Confessions</button>
+                <button id="importBtn" class="btn-secondary">Import Confessions</button>
+                <input type="file" id="importFile" accept=".json" style="display: none;">
+            </div>
+            <div class="backup-info">
+                <p>Your confessions are saved locally in your browser. Use Export to create backups.</p>
             </div>
             <div class="prayer-reminder">
-                <p id="dailyQuote"><em>Jesus loves you very much!</em></p>
+                <p id="dailyQuote"><em>Loading quote...</em></p>
             </div>
         </div>
 
         <!-- Page 2: Sin Selection -->
         <div id="page2" class="page">
             <div class="header">
-                <h2>Getting Ready for Confession</h2>
-                <p>Think about ways you may have not followed Jesus' way</p>
+                <h2>Examination of Conscience</h2>
+                <p>Select sins you need to confess</p>
             </div>
             
             <div class="search-container">
-                <input type="text" id="sinSearch" placeholder="Search for things you want to confess...">
+                <input type="text" id="sinSearch" placeholder="Search sins...">
             </div>
 
             <div class="sins-container">
@@ -41,21 +47,21 @@
             </div>
 
             <div class="selected-sins">
-                <h3>Things I Want to Confess</h3>
+                <h3>Selected Sins</h3>
                 <div id="selectedSinsList"></div>
             </div>
 
             <div class="navigation">
                 <button id="backToMenu1" class="btn-secondary">Back</button>
-                <button id="toScriptBtn" class="btn-primary">Next: My Confession</button>
+                <button id="toScriptBtn" class="btn-primary">Next: Confession Script</button>
             </div>
         </div>
 
         <!-- Page 3: Confession Script -->
         <div id="page3" class="page">
             <div class="header">
-                <h2>My Confession Practice</h2>
-                <p>Practice what you'll say to the priest</p>
+                <h2>Confession Script</h2>
+                <p>Your prepared confession</p>
             </div>
 
             <div class="confession-script" id="fullConfessionScript">
@@ -63,19 +69,30 @@
             </div>
 
             <div class="navigation">
-                <button id="backToSins" class="btn-secondary">Back</button>
-                <button id="saveConfessionBtn" class="btn-primary">Save My Confession</button>
+                <button id="backToSins" class="btn-secondary">Back to Sins</button>
+                <button id="saveConfessionBtn" class="btn-primary">Save Confession</button>
             </div>
         </div>
 
         <!-- Page 4: History -->
         <div id="page4" class="page">
             <div class="header">
-                <h2>My Confession History</h2>
+                <h2>Confession History</h2>
                 <button id="backToMenu2" class="btn-secondary">Back to Menu</button>
             </div>
             <div id="confessionHistory" class="history-container">
                 <!-- History items will be loaded here -->
+            </div>
+        </div>
+
+        <!-- Page 5: History Detail -->
+        <div id="page5" class="page">
+            <div class="header">
+                <h2>Confession Details</h2>
+                <button id="backToHistory" class="btn-secondary">Back to History</button>
+            </div>
+            <div id="confessionDetail" class="confession-detail">
+                <!-- Confession details will be loaded here -->
             </div>
         </div>
     </div>

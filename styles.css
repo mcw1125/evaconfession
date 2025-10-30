@@ -1,23 +1,156 @@
-/* Keep all your existing CSS but ensure the sin items display properly */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Georgia', serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+}
+
+#app {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    min-height: 100vh;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.page {
+    display: none;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.page.active {
+    display: block;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #2c3e50, #34495e);
+    color: white;
+    border-radius: 10px;
+}
+
+.header h1, .header h2 {
+    margin-bottom: 10px;
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 300px;
+    margin: 50px auto;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
+    color: white;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #95a5a6, #bdc3c7);
+    color: white;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.prayer-reminder {
+    text-align: center;
+    margin-top: 50px;
+    font-style: italic;
+    color: #7f8c8d;
+}
+
+.backup-info {
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+    background: #e8f4fd;
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+    font-size: 14px;
+    color: #2c3e50;
+    max-width: 300px;
+    margin: 20px auto;
+}
+
+/* Sin Selection Styles */
+.search-container {
+    margin-bottom: 20px;
+}
+
+#sinSearch {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #bdc3c7;
+    border-radius: 8px;
+    font-size: 16px;
+}
+
+.sins-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ecf0f1;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.sin-category {
+    margin-bottom: 20px;
+}
+
+.category-header {
+    background: #34495e;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
 
 .sin-items {
-    display: block; /* Changed from grid to block for better list layout */
+    display: block;
 }
 
 .sin-item {
     display: flex;
     align-items: center;
-    background: #e8f5e8;
-    padding: 12px 15px;
-    margin: 8px 0;
-    border-radius: 10px;
-    border-left: 5px solid #4CAF50;
-    transition: all 0.3s ease;
+    background: #ecf0f1;
+    padding: 10px 15px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border-left: 4px solid #e74c3c;
 }
 
-.sin-item:hover {
-    transform: translateX(5px);
-    background: #d4edda;
+.sin-item.venial {
+    border-left-color: #3498db;
 }
 
 /* Checkbox styles for sins */
@@ -27,12 +160,11 @@
     width: 100%;
     cursor: pointer;
     padding: 8px 0;
-    font-size: 16px;
 }
 
 .sin-checkbox-label input[type="checkbox"] {
-    margin-right: 15px;
-    transform: scale(1.3);
+    margin-right: 10px;
+    transform: scale(1.2);
 }
 
 .sin-text {
@@ -42,23 +174,483 @@
 
 .sin-type {
     font-size: 0.8em;
-    padding: 4px 10px;
-    border-radius: 15px;
-    background: #4CAF50;
+    padding: 2px 8px;
+    border-radius: 12px;
+    background: #e74c3c;
     color: white;
-    font-weight: bold;
 }
 
-/* Make the search bar optional rather than required */
-.search-container {
+.sin-type.venial {
+    background: #3498db;
+}
+
+/* Selected sins list */
+.selected-sins {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
     margin-bottom: 20px;
 }
 
-#sinSearch {
+#selectedSinsList {
+    min-height: 100px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.selected-sin-item {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border-left: 4px solid #e74c3c;
+    gap: 10px;
+}
+
+.selected-sin-item.venial {
+    border-left-color: #3498db;
+}
+
+.selected-sin-item .sin-text {
+    flex: 1;
+}
+
+.selected-sin-item .sin-type {
+    margin-right: 10px;
+}
+
+.remove-sin {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+/* Confession Script Styles */
+.confession-script {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.script-section {
+    margin-bottom: 30px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+}
+
+.script-section.priest {
+    border-left-color: #9b59b6;
+}
+
+.script-section.penitent {
+    border-left-color: #2ecc71;
+}
+
+.time-input {
+    margin: 15px 0;
+}
+
+#timeSince {
     width: 100%;
+    padding: 10px;
+    border: 2px solid #bdc3c7;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.sins-list ul {
+    list-style: none;
+    margin: 15px 0;
+}
+
+.sins-list li {
+    background: #ecf0f1;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border-left: 4px solid #e74c3c;
+}
+
+.sins-list li.venial {
+    border-left-color: #3498db;
+}
+
+.sin-type-badge {
+    font-size: 0.7em;
+    padding: 2px 8px;
+    border-radius: 12px;
+    background: #e74c3c;
+    color: white;
+    margin-left: 10px;
+}
+
+.sin-type-badge.venial {
+    background: #3498db;
+}
+
+.act-of-contrition textarea {
+    width: 100%;
+    height: 150px;
     padding: 15px;
-    border: 3px solid #4CAF50;
-    border-radius: 25px;
+    border: 2px solid #bdc3c7;
+    border-radius: 8px;
+    font-family: 'Georgia', serif;
+    font-size: 14px;
+    line-height: 1.6;
+    resize: vertical;
+}
+
+/* Full script styles */
+.full-script {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+}
+
+.full-script .script-section {
+    margin-bottom: 25px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+}
+
+.full-script .script-section.priest {
+    border-left-color: #9b59b6;
+}
+
+.full-script .script-section.penitent {
+    border-left-color: #2ecc71;
+}
+
+.full-script .time-input {
+    margin: 15px 0;
+    padding: 15px;
+    background: #ecf0f1;
+    border-radius: 5px;
+}
+
+.full-script .time-input input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    border: 2px solid #bdc3c7;
+    border-radius: 5px;
     font-size: 16px;
-    font-family: 'Comic Sans MS', cursive;
+}
+
+.full-script .act-of-contrition {
+    background: #fff3cd;
+    padding: 20px;
+    border-radius: 8px;
+    border-left: 4px solid #ffc107;
+    font-style: italic;
+    line-height: 1.6;
+}
+
+/* Penance section in history */
+.penance-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: white;
+    border-radius: 8px;
+    border: 2px solid #3498db;
+}
+
+.penance-section h4 {
+    margin-bottom: 15px;
+    color: #2c3e50;
+    text-align: center;
+}
+
+.penance-options {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.penance-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 2px solid #ecf0f1;
+}
+
+.penance-option input[type="checkbox"] {
+    transform: scale(1.2);
+}
+
+.penance-count-option {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 2px solid #ecf0f1;
+}
+
+.penance-count-option label {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.penance-count-option input {
+    width: 80px;
+    padding: 8px;
+    border: 2px solid #bdc3c7;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.penance-other-option {
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    border: 2px solid #ecf0f1;
+}
+
+.penance-other-option label {
+    display: block;
+    font-weight: bold;
+    color: #2c3e50;
+    margin-bottom: 8px;
+}
+
+.penance-other-option input {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid #bdc3c7;
+    border-radius: 5px;
+}
+
+/* History Styles */
+.history-container {
+    display: grid;
+    gap: 15px;
+}
+
+.history-date-header {
+    background: #2c3e50;
+    color: white;
+    padding: 10px 15px;
+    margin: 20px 0 10px 0;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+.history-item {
+    background: white;
+    padding: 15px;
+    margin: 10px 0;
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    padding-right: 100px;
+}
+
+.history-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.history-item-content {
+    cursor: pointer;
+}
+
+.history-item-time {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.history-item-stats {
+    color: #7f8c8d;
+    margin: 5px 0;
+}
+
+.history-item-summary {
+    color: #7f8c8d;
+    font-style: italic;
+    margin-top: 5px;
+}
+
+.history-item-penance {
+    font-style: italic;
+    color: #27ae60;
+    margin-top: 5px;
+    font-weight: bold;
+}
+
+.history-item-actions {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    gap: 10px;
+}
+
+.delete-confession {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.delete-confession:hover {
+    background: #c0392b;
+}
+
+.history-item-arrow {
+    color: #bdc3c7;
+    font-size: 1.2em;
+}
+
+/* Confession detail styles */
+.confession-detail {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.detail-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #ecf0f1;
+}
+
+.detail-section {
+    background: white;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 8px;
+    border-left: 4px solid #3498db;
+}
+
+.detail-section h4 {
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.detail-sins-list {
+    margin-top: 10px;
+}
+
+.detail-sin-item {
+    background: #ecf0f1;
+    padding: 10px 15px;
+    margin: 5px 0;
+    border-radius: 5px;
+    border-left: 4px solid #e74c3c;
+}
+
+.detail-sin-item.venial {
+    border-left-color: #3498db;
+}
+
+/* Quote styles */
+#dailyQuote {
+    text-align: center;
+    font-style: italic;
+    color: #7f8c8d;
+    line-height: 1.6;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+/* Navigation */
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+/* Ensure hidden class works */
+.hidden {
+    display: none !important;
+}
+
+/* Make sure pages work correctly */
+.page:not(.active) {
+    display: none;
+}
+
+/* Make sure the file input is hidden but functional */
+#importFile {
+    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #app {
+        margin: 0;
+    }
+    
+    .page {
+        padding: 10px;
+    }
+    
+    .sin-items {
+        grid-template-columns: 1fr;
+    }
+    
+    .navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .navigation button {
+        width: 100%;
+    }
+    
+    .history-item {
+        padding-right: 15px;
+    }
+    
+    .history-item-actions {
+        position: static;
+        transform: none;
+        margin-top: 10px;
+        justify-content: flex-end;
+    }
+    
+    .menu-buttons {
+        max-width: 100%;
+    }
+}
+/* Add this to your existing CSS */
+.view-details-btn {
+    background: #3498db;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+.view-details-btn:hover {
+    background: #2980b9;
 }
