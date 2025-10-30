@@ -1,0 +1,417 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Comic Sans MS', 'Georgia', serif;
+    line-height: 1.6;
+    color: #333;
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    min-height: 100vh;
+}
+
+#app {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    min-height: 100vh;
+    box-shadow: 0 0 20px rgba(0,0,0,0.1);
+}
+
+.page {
+    display: none;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+.page.active {
+    display: block;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #4CAF50, #45a049);
+    color: white;
+    border-radius: 15px;
+    border: 3px solid #FFD700;
+}
+
+.header h1, .header h2 {
+    margin-bottom: 10px;
+    color: #FFD700;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.menu-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    max-width: 300px;
+    margin: 50px auto;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 25px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Comic Sans MS', cursive;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #FF6B6B, #FF8E53);
+    color: white;
+    border: 3px solid #FFD700;
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #48c6ef, #6f86d6);
+    color: white;
+    border: 3px solid #FFD700;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255,107,107,0.4);
+}
+
+.btn-secondary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(72,198,239,0.4);
+}
+
+.prayer-reminder {
+    text-align: center;
+    margin-top: 50px;
+    font-style: italic;
+    color: #666;
+    font-size: 18px;
+}
+
+/* Sin Selection Styles */
+.search-container {
+    margin-bottom: 20px;
+}
+
+#sinSearch {
+    width: 100%;
+    padding: 15px;
+    border: 3px solid #4CAF50;
+    border-radius: 25px;
+    font-size: 16px;
+    font-family: 'Comic Sans MS', cursive;
+}
+
+.sins-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 3px solid #FFD700;
+    border-radius: 15px;
+    padding: 15px;
+    margin-bottom: 20px;
+    background: #f9f9f9;
+}
+
+.sin-category {
+    margin-bottom: 20px;
+}
+
+.category-header {
+    background: linear-gradient(135deg, #6f86d6, #48c6ef);
+    color: white;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    border: 2px solid #FFD700;
+}
+
+.sin-items {
+    display: block;
+}
+
+.sin-item {
+    display: flex;
+    align-items: center;
+    background: #e8f5e8;
+    padding: 12px 15px;
+    margin: 8px 0;
+    border-radius: 10px;
+    border-left: 5px solid #4CAF50;
+    transition: all 0.3s ease;
+}
+
+.sin-item:hover {
+    transform: translateX(5px);
+    background: #d4edda;
+}
+
+/* Checkbox styles for sins */
+.sin-checkbox-label {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    cursor: pointer;
+    padding: 8px 0;
+    font-size: 16px;
+}
+
+.sin-checkbox-label input[type="checkbox"] {
+    margin-right: 15px;
+    transform: scale(1.3);
+}
+
+.sin-text {
+    flex: 1;
+    margin-right: 10px;
+}
+
+.sin-type {
+    font-size: 0.8em;
+    padding: 4px 10px;
+    border-radius: 15px;
+    background: #4CAF50;
+    color: white;
+    font-weight: bold;
+}
+
+/* Selected sins list */
+.selected-sins {
+    background: #f0f8ff;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    border: 3px solid #6f86d6;
+}
+
+#selectedSinsList {
+    min-height: 100px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.selected-sin-item {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 10px;
+    border-left: 5px solid #4CAF50;
+    gap: 10px;
+    border: 2px solid #FFD700;
+}
+
+.selected-sin-item .sin-text {
+    flex: 1;
+    font-size: 16px;
+}
+
+.selected-sin-item .sin-type {
+    margin-right: 10px;
+}
+
+.remove-sin {
+    background: #FF6B6B;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: 'Comic Sans MS', cursive;
+}
+
+/* Confession Script Styles */
+.confession-script {
+    background: #f0f8ff;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 20px;
+    border: 3px solid #6f86d6;
+}
+
+.script-section {
+    margin-bottom: 25px;
+    padding: 20px;
+    background: white;
+    border-radius: 12px;
+    border-left: 5px solid #6f86d6;
+    border: 2px solid #FFD700;
+}
+
+.script-section.priest {
+    border-left-color: #9b59b6;
+}
+
+.script-section.penitent {
+    border-left-color: #4CAF50;
+}
+
+.time-input {
+    margin: 15px 0;
+}
+
+#timeSince {
+    width: 100%;
+    padding: 12px;
+    border: 3px solid #4CAF50;
+    border-radius: 10px;
+    margin-top: 8px;
+    font-size: 16px;
+    font-family: 'Comic Sans MS', cursive;
+}
+
+.sins-list ul {
+    list-style: none;
+    margin: 15px 0;
+}
+
+.sins-list li {
+    background: #e8f5e8;
+    padding: 12px;
+    margin: 8px 0;
+    border-radius: 8px;
+    border-left: 5px solid #4CAF50;
+    font-size: 16px;
+}
+
+.sin-type-badge {
+    font-size: 0.7em;
+    padding: 4px 10px;
+    border-radius: 12px;
+    background: #4CAF50;
+    color: white;
+    margin-left: 10px;
+    font-weight: bold;
+}
+
+.act-of-contrition {
+    background: #fff3cd;
+    padding: 20px;
+    border-radius: 12px;
+    border-left: 5px solid #ffc107;
+    font-style: italic;
+    line-height: 1.6;
+    border: 2px solid #FFD700;
+}
+
+/* History Styles */
+.history-container {
+    display: grid;
+    gap: 15px;
+}
+
+.history-item {
+    background: white;
+    padding: 20px;
+    margin: 10px 0;
+    border-radius: 15px;
+    border-left: 5px solid #6f86d6;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    border: 2px solid #FFD700;
+}
+
+.history-item:hover {
+    transform: translateX(5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.history-item-content {
+    cursor: pointer;
+}
+
+.history-item-time {
+    font-weight: bold;
+    color: #2c3e50;
+    font-size: 16px;
+}
+
+.history-item-stats {
+    color: #7f8c8d;
+    margin: 8px 0;
+    font-size: 16px;
+}
+
+.history-item-summary {
+    color: #7f8c8d;
+    font-style: italic;
+    margin-top: 8px;
+    font-size: 16px;
+}
+
+.delete-confession {
+    background: #FF6B6B;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-family: 'Comic Sans MS', cursive;
+}
+
+.delete-confession:hover {
+    background: #e74c3c;
+}
+
+/* Navigation */
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+/* Ensure hidden class works */
+.hidden {
+    display: none !important;
+}
+
+/* Make sure pages work correctly */
+.page:not(.active) {
+    display: none;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #app {
+        margin: 0;
+    }
+    
+    .page {
+        padding: 15px;
+    }
+    
+    .sin-items {
+        grid-template-columns: 1fr;
+    }
+    
+    .navigation {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .navigation button {
+        width: 100%;
+    }
+    
+    .menu-buttons {
+        max-width: 100%;
+    }
+    
+    .header h1 {
+        font-size: 24px;
+    }
+    
+    .header h2 {
+        font-size: 20px;
+    }
+}
