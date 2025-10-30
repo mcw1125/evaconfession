@@ -1,4 +1,4 @@
-// Sins for children's examination of conscience - worded for confession
+// Children's sins for examination of conscience - worded for confession
 const sinsData = [
     {
         category: "The First Commandment: I am the Lord your God, you shall have no other gods before me",
