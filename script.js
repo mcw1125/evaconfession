@@ -34,7 +34,7 @@ function setupEventListeners() {
     document.getElementById('toScriptBtn').addEventListener('click', prepareConfessionScript);
     document.getElementById('saveConfessionBtn').addEventListener('click', saveConfession);
 
-    // Search functionality
+    // Search functionality (optional filter)
     document.getElementById('sinSearch').addEventListener('input', (e) => {
         filterSins(e.target.value);
     });
@@ -129,7 +129,7 @@ function displayDailyQuote() {
     }
 }
 
-// Sin management
+// Sin management - FIXED: Now displays all sins in a list with checkboxes
 function loadSinsCategories() {
     const container = document.getElementById('sinsCategories');
     if (!container) return;
@@ -140,7 +140,7 @@ function loadSinsCategories() {
         const categoryElement = document.createElement('div');
         categoryElement.className = 'sin-category';
         categoryElement.innerHTML = `
-            <div class="category-header" onclick="toggleCategory(this)">
+            <div class="category-header">
                 ${category.category}
             </div>
             <div class="sin-items">
@@ -158,11 +158,6 @@ function loadSinsCategories() {
         `;
         container.appendChild(categoryElement);
     });
-}
-
-function toggleCategory(header) {
-    const items = header.parentElement.querySelector('.sin-items');
-    items.classList.toggle('hidden');
 }
 
 function toggleSin(sinText, sinType, isChecked) {
